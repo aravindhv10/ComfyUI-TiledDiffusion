@@ -305,6 +305,14 @@ class AbstractDiffusion:
                 if len(self.batched_bboxes) >= len(val[param_id]):
                     val[param_id].extend([[None] for _ in range(len(self.batched_bboxes))])
 
+            while len(self.control_params[tuple_key]) <= param_id:
+                self.control_params[tuple_key].extend([None])
+                # print('extending param_id')
+
+            while len(self.control_params[tuple_key][param_id]) <= batch_id:
+                self.control_params[tuple_key][param_id].extend([None])
+                # print('extending batch_id')
+
             # Below is taken from comfy.controlnet.py, but we need to additionally tile the cnets.
             # if statement: eager eval. first time when cond_hint is None. 
             if self.refresh or control.cond_hint is None or not isinstance(self.control_params[tuple_key][param_id][batch_id], Tensor):
